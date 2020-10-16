@@ -1,19 +1,11 @@
 <!-- ComplementaryFilter launch file -->
 <launch>
-  #### Nodelet manager ######################################################
-
-  <node pkg="nodelet" type="nodelet" name="imu_manager" 
-    args="manager" output="screen" />
 
   #### IMU Driver ###########################################################
 
-  <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet" 
-    args="load phidgets_imu/PhidgetsImuNodelet imu_manager" 
+  <node pkg="mpu6050_python" type="mpu6050.py" name="mpu6050" 
     output="screen">
-
-    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
-    <param name="period" value="4"/>
-
+    <remap from="/mpu6050" to="/imu/data_raw"/>
   </node>
 
   #### Complementary filter
@@ -25,10 +17,9 @@
     <param name="use_mag" value="false"/>
     <param name="gain_acc" value="0.01"/>
     <param name="gain_mag" value="0.01"/>
- 
-  
   </node>
-  
 
+  #### Rviz
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find imu_complementary_filter)/launch/imu_display.rviz"/>
 
 </launch>
